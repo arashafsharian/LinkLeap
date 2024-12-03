@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const signToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -26,7 +27,14 @@ export const signup = async (req, res) => {
         message: "Password must be at least 6 characters.",
       });
     }
-    const newUser = await User.create({
+
+    let user = await User.findOne({ email });
+    if (user)
+      return res
+        .status(400)
+        .json({ success: false, message: "User already registered." });
+
+    user = new User({
       name,
       email,
       password,
@@ -35,7 +43,12 @@ export const signup = async (req, res) => {
       genderPreference,
     });
 
-    const token = signToken(newUser._id);
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+
+    await user.save();
+
+    const token = signToken(user._id);
 
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -47,12 +60,12 @@ export const signup = async (req, res) => {
     res.status(201).json({
       success: true,
       user: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        age: newUser.age,
-        gender: newUser.gender,
-        genderPreference: newUser.genderPreference,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        gender: user.gender,
+        genderPreference: user.genderPreference,
       },
     });
   } catch (error) {
@@ -71,7 +84,7 @@ export const login = async (req, res) => {
     }
     const user = await User.findOne({ email }).select("+password");
 
-    if (!user || (await user.matchPassword(password))) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password.",
@@ -92,7 +105,7 @@ export const login = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log("Error in signup controller: ", error);
+    console.log("Error in login controller: ", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
