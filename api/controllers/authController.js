@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import { User, validateSignup, validateLogin } from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -7,26 +7,14 @@ const signToken = (_id) => {
 };
 
 export const signup = async (req, res) => {
-  const { name, email, password, age, gender, genderPreference } = req.body;
   try {
-    if (!name || !email || !password || !age || !gender || !genderPreference) {
+    const { name, email, password, age, gender, genderPreference } = req.body;
+    const { error } = validateSignup(req.body);
+    if (error)
       return res.status(400).json({
         success: false,
-        message: "All fields are required.",
+        message: error.details[0].message,
       });
-    }
-    if (age < 18) {
-      return res.status(400).json({
-        success: false,
-        message: "You must be at least 18 years old.",
-      });
-    }
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters.",
-      });
-    }
 
     let user = await User.findOne({ email });
     if (user)
@@ -74,15 +62,16 @@ export const signup = async (req, res) => {
   }
 };
 export const login = async (req, res) => {
-  const { email, password } = req.body;
   try {
-    if (!email || !password) {
+    const { email, password } = req.body;
+    const { error } = validateLogin(req.body);
+    if (error)
       return res.status(400).json({
         success: false,
-        message: "All fields are required.",
+        message: error.details[0].message,
       });
-    }
-    const user = await User.findOne({ email }).select("+password");
+
+    const user = await User.findOne({ email });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({

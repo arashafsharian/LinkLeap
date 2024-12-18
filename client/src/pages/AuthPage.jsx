@@ -7,11 +7,19 @@ const AuthPage = () => {
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-gradient-to-br
-		from-red-500 to-pink-500 p-4"
+		from-cyan-900 to-black p-4"
     >
       <div className="w-full max-w-md">
         <h2 className="text-center text-3xl font-extrabold text-white mb-8">
-          {isLogin ? "Sign in to LinkLeap" : "Create a LinkLeap account"}
+          {isLogin ? (
+            <>
+              Sign in to <span className="text-red-500">LinkLeap</span>
+            </>
+          ) : (
+            <>
+              Create a <span className="text-red-500">LinkLeap</span> account
+            </>
+          )}
         </h2>
         <div className="bg-white shadow-xl rounded-lg p-8">
           {isLogin ? <LoginForm /> : <SignUpForm />}
@@ -22,7 +30,7 @@ const AuthPage = () => {
 
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="mt-2 text-red-600 hover:text-red-800 font-medium transition-colors duration-300"
+              className="mt-2 text-red-500 hover:text-red-700 font-medium transition-colors duration-300"
             >
               {isLogin ? "Create a new account" : "Sign in to your account"}
             </button>
