@@ -44,11 +44,11 @@ const Sidebar = () => {
             ) : (
               matches.map((match) => (
                 <Link key={match._id} to={`/chat/${match._id}`}>
-                  <div className="flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300">
+                  <div className="flex items-center mb-4 cursor-pointer hover:bg-red-100 p-2 rounded-lg transition-colors duration-300">
                     <img
                       src={match.image || "/avatar.png"}
                       alt="User avatar"
-                      className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
+                      className="size-12 object-cover rounded-full mr-3 border-2 border-red-400"
                     />
 
                     <h3 className="font-semibold text-gray-800">

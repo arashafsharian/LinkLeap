@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { Flame, User, LogOut, Menu } from "lucide-react";
+import { Flame, User, LogOut } from "lucide-react";
 
 export const Header = () => {
   const { authUser, logout } = useAuthStore();
@@ -19,7 +19,7 @@ export const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [dropdownRef]);
 
   return (
     <header className="bg-gradient-to-r from-cyan-900 to-gray-900 shadow-lg">
@@ -70,23 +70,7 @@ export const Header = () => {
                   </div>
                 )}
               </div>
-            ) : (
-              <>
-                <Link
-                  to="/auth"
-                  className="text-white hover:text-pink-200 transition duration-150 ease-in-out"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/auth"
-                  className="bg-white text-pink-600 px-4 py-2 rounded-full font-medium
-                   hover:bg-pink-100 transition duration-150 ease-in-out"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden">
@@ -94,7 +78,19 @@ export const Header = () => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-white focus:otline-none"
             >
-              <Menu className="size-6" />
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center space-x-2 focus:outline-none"
+              >
+                <img
+                  src={authUser.image || "/avatar.png"}
+                  className="h-10 w-10 object-cover rounded-full border-2 border-gray-100"
+                  alt="User image"
+                />
+                <span className="text-gray-100 font-medium">
+                  {authUser.name}
+                </span>
+              </button>
             </button>
           </div>
         </div>
@@ -124,24 +120,7 @@ export const Header = () => {
                   Logout
                 </button>
               </>
-            ) : (
-              <>
-                <Link
-                  to="/auth"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/auth"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
         </div>
       )}

@@ -39,7 +39,7 @@ const MessageInput = ({ match }) => {
       <button
         type="button"
         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-500 focus:outline-none"
+        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 focus:outline-none"
       >
         <Smile size={24} />
       </button>
@@ -48,15 +48,15 @@ const MessageInput = ({ match }) => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="flex-grow p-3 pl-12 rounded-l-lg border-2 border-pink-500 
-        focus:outline-none focus:ring-2 focus:ring-pink-300"
+        className="flex-grow p-3 pl-12 rounded-l-lg border-2 border-red-500 
+        focus:outline-none focus:ring-2 focus:ring-red-300"
         placeholder="Type a message..."
       />
 
       <button
         type="submit"
-        className="bg-pink-500 text-white p-3 rounded-r-lg 
-        hover:bg-pink-600 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-300"
+        className="bg-red-600 text-white p-3 rounded-r-lg 
+        hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
       >
         <Send size={24} />
       </button>
